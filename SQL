@@ -1,0 +1,21 @@
+
+/* The SQL solution for problem in the link https://www.db-fiddle.com/f/fufVxMKne1xMNHCbFoANMo/0 */
+
+select
+date,
+avg(tot_amt) over (order by date rows between 2 preceding and current row) rolling_3day_avg
+from
+  (
+  select
+  date,
+  sum(transaction_amount) as tot_amt
+  from
+    (
+    select *,
+    TO_CHAR(transaction_time,'yyyy:mm:dd')date
+    from transactions
+    ) t
+  group by date
+  order by date
+  ) day
+;
